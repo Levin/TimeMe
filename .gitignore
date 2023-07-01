@@ -26,4 +26,4 @@ timeme-*.tar
 /tmp/
 
 
-.vscode/
+/.vscode/
