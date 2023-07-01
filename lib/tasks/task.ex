@@ -6,6 +6,7 @@ defmodule Tasks.Task do
   alias Timeme.Repo
 
 
+
   def changeset(struct, params) do
     struct
     |> cast(params, [:title, :description,:due_date])
@@ -33,11 +34,9 @@ defmodule Tasks.Task do
     Timeme.Repo.all(Task)
   end
 
-  def display_tasks_by_type(%Tasks.Type{id: t_id, type: _type}) do
+  def display_tasks_by_type(t_id) do
     case Tasks.TaskType.get_type_by_type_id(t_id) do
-      {:ok, %Postgrex.Result{rows: task_ids}} ->
-        Enum.map(List.flatten(task_ids), &(Timeme.Repo.get_task_by_id(&1)))
-
+      {:ok, %Postgrex.Result{rows: task_ids}} -> Enum.map(List.flatten(task_ids), &(Timeme.Repo.get_task_by_id(&1)))
     end
   end
 
