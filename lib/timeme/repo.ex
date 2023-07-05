@@ -1,5 +1,7 @@
 defmodule Timeme.Repo do
+  alias Users.Status
   alias Tasks.Task
+  alias Timeme.Repo
   use Ecto.Repo,
     otp_app: :timeme,
     adapter: Ecto.Adapters.Postgres
@@ -59,6 +61,21 @@ defmodule Timeme.Repo do
 
     def get_tasktype_by_type_id(id) do
       Timeme.Repo.query("SELECT task_id FROM task_type_link WHERE type_id = #{id}")
+    end
+
+    def insert_status(%Users.Status{status_id: _id, title: _title} = status) do
+      Repo.insert!(status)
+    end
+
+    def get_last_status() do
+      query = "SELECT status.status_id FROM status ORDER BY status.status_id DESC LIMIT 1;"
+      Repo.query(query)
+    end
+
+
+
+    def get_status_number_from_string(status_str) do
+
     end
 
 

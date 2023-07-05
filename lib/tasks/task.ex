@@ -6,7 +6,6 @@ defmodule Tasks.Task do
   alias Timeme.Repo
 
 
-
   def changeset(struct, params) do
     struct
     |> cast(params, [:title, :description,:due_date])
