@@ -24,6 +24,7 @@ defmodule Tasks.Task do
   def new_task(%Task{title: title, description: description, due_date: due_date} = task, %Type{type: _typ} = type) do
     Timeme.Repo.insert_task(title, description, due_date)
     Tasks.TaskType.connect_task_with_type(task, type)
+
   end
 
   def remove_task(title) do
