@@ -8,7 +8,7 @@ defmodule Timeme.Repo do
 
 
     def insert_task(title, description, due_date) do
-          Timeme.Repo.insert!(%Tasks.Task{title: title, description: description, due_date: due_date})
+      Timeme.Repo.insert!(%Tasks.Task{title: title, description: description, due_date: due_date})
     end
 
     def get_task_by_title(title) do
@@ -72,12 +72,22 @@ defmodule Timeme.Repo do
       Repo.query(query)
     end
 
-
-
-    def get_status_number_from_string(status_str) do
-
+    def get_last_user() do
+      query = "SELECT users.id FROM users ORDER BY users.id DESC LIMIT 1;"
+      Repo.query(query)
     end
 
+
+    def get_status_by_title(status) do
+      Repo.get_by!(Users.Status, title: status);
+    end
+    def get_status_number_from_string(status_str) do
+      Repo.get_by!(Status, title: status_str)
+    end
+
+    def create_user(%Users.User{name: _name, password_hashed: _password, status: _status_id} = user) do
+      Repo.insert!(user)
+    end
 
 
 
