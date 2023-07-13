@@ -1,5 +1,4 @@
 defmodule Users.User do
-  alias Users.Status
   use Ecto.Schema
   import Ecto.Changeset
   alias Timeme.Repo

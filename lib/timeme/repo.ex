@@ -67,6 +67,11 @@ defmodule Timeme.Repo do
       Repo.insert!(status)
     end
 
+    def get_last_task() do
+      query = "SELECT tasks.id FROM tasks ORDER BY tasks.id DESC LIMIT 1;"
+      Repo.query(query)
+    end
+
     def get_last_status() do
       query = "SELECT status.status_id FROM status ORDER BY status.status_id DESC LIMIT 1;"
       Repo.query(query)

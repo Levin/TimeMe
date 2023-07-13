@@ -1,5 +1,6 @@
 defmodule Tasks.TaskType do
   use Ecto.Schema
+  alias Postgrex.Result
   alias Timeme.Repo
 
   schema "task_type_link" do
@@ -8,9 +9,9 @@ defmodule Tasks.TaskType do
   end
 
   def connect_task_with_type(%Tasks.Task{title: task_title}, %Tasks.Type{type: type_title}) do
-    %Tasks.Task{id: task_id} = Timeme.Repo.get_task_by_title(task_title)
+    {:ok, %Postgrex.Result{rows: [task_id_list]}} = Timeme.Repo.get_last_task()
+    [task_id] = task_id_list
     %Tasks.Type{id: type_id} = Timeme.Repo.get_type_by_title(type_title)
-
     Repo.connector(%Tasks.TaskType{task_id: task_id, type_id: type_id})
   end
 

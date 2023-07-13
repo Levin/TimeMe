@@ -21,9 +21,13 @@ defmodule Tasks.Task do
 
   # umschreiben auf new_task(title, description, due_date, type) evtl
   def new_task(%Task{title: title, description: description, due_date: due_date} = task, %Type{type: _typ} = type) do
+    #[day, month, year] = String.split(due_date, "-") |> Enum.map(&String.to_integer/1)
+    #{:ok, parsed_date} = Date.from_iso8601("#{year}-#{month}-#{day}")
+    #IO.inspect(Date.from_iso8601(due_date))
     Timeme.Repo.insert_task(title, description, due_date)
+    IO.inspect("asdf")
+    #TODO: get task by id in connect_task_with_type, getting errors because its returning multiple rows
     Tasks.TaskType.connect_task_with_type(task, type)
-
   end
 
   def remove_task(title) do
