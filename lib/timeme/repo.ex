@@ -77,7 +77,6 @@ defmodule Timeme.Repo do
       Repo.query(query)
     end
 
-
     def get_status_by_title(status) do
       Repo.get_by!(Users.Status, title: status);
     end
@@ -85,8 +84,12 @@ defmodule Timeme.Repo do
       Repo.get_by!(Status, title: status_str)
     end
 
-    def create_user(%Users.User{name: _name, password_hashed: _password, status: _status_id} = user) do
+    def create_user(%Users.User{name: _name, password_hashed: _password} = user) do
       Repo.insert!(user)
+    end
+
+    def link_user_status(%Users.Userstatus{user_id: _u_id, status_id: _s_id} = userstatus) do
+      Repo.insert!(userstatus)
     end
 
 

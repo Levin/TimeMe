@@ -25,10 +25,5 @@ defmodule Users.Status do
   end
 
 
-  def link_status_to_user(status, user_id) do
-
-  end
-
-
 
 end
