@@ -19,6 +19,69 @@ defmodule Timeme.Repo do
       Timeme.Repo.get_by!(Task, id: id)
     end
 
+    def get_tasks_from_today() do
+      date = %DateTime{year: year, month: month, day: day} = DateTime.utc_now()
+      IO.inspect(date)
+      tasks = case get_tasks_by_due_date(date) do
+        {:ok, %Postgrex.Result{rows: rows} = _res} -> rows
+        {:error, %Postgrex.Error{}} -> []
+      end
+    end
+
+    def get_tasks_from_this_week() do
+      date = %DateTime{year: year, month: month, day: day} = DateTime.utc_now()
+      week_begin = Date.beginning_of_week(date)
+      tasks = case day - week_begin.day do
+        6 -> get_tasks_from_today()
+        5 ->
+          day_five = get_tasks_by_due_date(%DateTime{date |  day: day-1})
+          day_six = get_tasks_by_due_date(date)
+          Enum.concat(day_five, day_six)
+        4 ->
+          day_four = get_tasks_by_due_date(%DateTime{date |  day: day-2})
+          day_five = get_tasks_by_due_date(%DateTime{date |  day: day-1})
+          day_six = get_tasks_by_due_date(date)
+          concat_one = Enum.concat(day_five, day_six)
+          Enum.concat(concat_one, day_four)
+        3 ->
+          day_three = get_tasks_by_due_date(%DateTime{date |  day: day-3})
+          day_four = get_tasks_by_due_date(%DateTime{date |  day: day-2})
+          day_five = get_tasks_by_due_date(%DateTime{date |  day: day-1})
+          day_six = get_tasks_by_due_date(date)
+          concat_one = Enum.concat(day_five, day_six)
+          concat_two = Enum.concat(concat_one, day_four)
+          Enum.concat(concat_two, day_three)
+        2 ->
+          day_two = get_tasks_by_due_date(%DateTime{date |  day: day-4})
+          day_three = get_tasks_by_due_date(%DateTime{date |  day: day-3})
+          day_four = get_tasks_by_due_date(%DateTime{date |  day: day-2})
+          day_five = get_tasks_by_due_date(%DateTime{date |  day: day-1})
+          day_six = get_tasks_by_due_date(date)
+          concat_one = Enum.concat(day_five, day_six)
+          concat_two = Enum.concat(concat_one, day_four)
+          concat_three = Enum.concat(concat_two, day_three)
+          Enum.concat(concat_three, day_two)
+        1 ->
+          day_one = get_tasks_by_due_date(%DateTime{date |  day: day-5})
+          day_two = get_tasks_by_due_date(%DateTime{date |  day: day-4})
+          day_three = get_tasks_by_due_date(%DateTime{date |  day: day-3})
+          day_four = get_tasks_by_due_date(%DateTime{date |  day: day-2})
+          day_five = get_tasks_by_due_date(%DateTime{date |  day: day-1})
+          day_six = get_tasks_by_due_date(date)
+          concat_one = Enum.concat(day_five, day_six)
+          concat_two = Enum.concat(concat_one, day_four)
+          concat_three = Enum.concat(concat_two, day_three)
+          concat_four = Enum.concat(concat_three, day_two)
+          Enum.concat(concat_four, day_one)
+      end
+
+
+    end
+
+    def get_tasks_by_due_date(date) do
+      Repo.query("select * from tasks as t where t.due_date = '#{date.day}.#{date.month}.#{date.year}'")
+    end
+
     def remove_task(title) do
       task = Timeme.Repo.get_task_by_title(title)
       case Timeme.Repo.delete task do
